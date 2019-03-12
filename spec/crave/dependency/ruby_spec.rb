@@ -1,7 +1,11 @@
 require 'crave/dependency/ruby'
+require 'fileutils'
 
 describe Crave::Dependency::Ruby do
   before do
+    Dir.glob(fixture_path('ruby-*/ruby')).each do |exe|
+      FileUtils.chmod('+x', exe)
+    end
   end
 
   describe "#find_installations" do
