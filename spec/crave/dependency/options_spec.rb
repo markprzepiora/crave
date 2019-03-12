@@ -21,4 +21,16 @@ describe Crave::Dependency::Options do
     options.foo.should == 111
     options.bar.should == 222
   end
+
+  it "can prepend array options with another array" do
+    options_klass = Crave::Dependency::Options.class_factory([], where: ['baz'])
+    options = options_klass.new(where: ['foo', 'bar'])
+    options.where.should == %w(foo bar baz)
+  end
+
+  it "can prepend array options with a single value" do
+    options_klass = Crave::Dependency::Options.class_factory([], where: ['bar'])
+    options = options_klass.new(where: 'foo')
+    options.where.should == %w(foo bar)
+  end
 end
