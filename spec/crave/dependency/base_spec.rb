@@ -10,8 +10,10 @@ describe Crave::Dependency::Base do
       options :baz
     end
 
-    klass_1.option_names.should == %w(where foo bar)
-    klass_2.option_names.should == %w(where baz)
+    klass_1.option_names.should include(*%w(where foo bar))
+    klass_1.option_names.should_not include(*%w(baz))
+    klass_2.option_names.should include(*%w(where baz))
+    klass_2.option_names.should_not include(*%w(foo bar))
   end
 
   it 'has an options object' do
