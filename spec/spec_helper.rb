@@ -9,3 +9,7 @@ RSpec.configure do |config|
     c.syntax = :should
   end
 end
+
+def fixture_path(path)
+  File.join(__dir__, 'fixtures', path)
+end

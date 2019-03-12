@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [ "$1" == "--version" ]; then
+  echo "ruby 2.4.0"
+elif [ "$1" == "--disable-gems" ]; then
+  echo "2.4.0"
+fi

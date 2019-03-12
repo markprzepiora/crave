@@ -1,4 +1,5 @@
 require_relative '../dependency'
+require_relative '../find_executables'
 require_relative 'options'
 require 'open3'
 
@@ -37,10 +38,19 @@ class Crave::Dependency::Base
 
   attr_reader :options
   options where: []
+  options version: []
 
   def initialize(options_hash = {})
     @options = Crave::Dependency::Options.class_factory(
       self.class.option_names, self.class.default_options).new(options_hash)
+  end
+
+  def system_out(*args)
+    Open3.capture2(*args).first
+  end
+
+  def find_executables(*args)
+    Crave::FindExecutables.find_executables(*args)
   end
 
   def self.inherited(subclass)
