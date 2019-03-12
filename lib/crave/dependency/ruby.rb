@@ -1,4 +1,5 @@
 require 'crave/dependency/base'
+require 'open3'
 
 class Crave::Dependency::Ruby < Crave::Dependency::Base
   options where: %w( /usr/bin /usr/local/bin ~/.rubies/ruby*/bin ~/.rvm )
@@ -31,7 +32,7 @@ class Crave::Dependency::Ruby < Crave::Dependency::Base
       @exe = ruby_executable
     end
 
-    def match?(version_specifier = [])
+    def match?(*version_specifier)
       Gem::Requirement.new(*version_specifier).satisfied_by?(version)
     end
 
@@ -47,7 +48,7 @@ class Crave::Dependency::Ruby < Crave::Dependency::Base
     private
 
     def version_string
-      @version_string ||= system_out(cmd, "--disable-gems", "-e", "puts RUBY_VERSION").chomp
+      @version_string ||= [system_out(exe, "--disable-gems", "-e", "puts RUBY_VERSION").chomp]
       @version_string[0]
     end
 
@@ -57,6 +58,10 @@ class Crave::Dependency::Ruby < Crave::Dependency::Base
       rescue ArgumentError => e
         Gem::Version.create("0.0")
       end
+    end
+
+    def system_out(*args)
+      Open3.capture2(*args).first
     end
   end
 end
