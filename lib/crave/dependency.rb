@@ -1,0 +1,2 @@
+module Crave::Dependency
+end
