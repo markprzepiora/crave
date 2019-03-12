@@ -9,11 +9,13 @@ class Crave::Dependency::Options
     end.to_h
   end
 
-  def self.class_factory(*named_options)
+  def self.class_factory(named_options = [], default_options = {})
+    default_options = default_options.map{ |k,v| [k.to_s, v] }.to_h
     named_options = named_options.dup.map(&:to_s)
 
     Class.new(self) do
       define_method(:named_options) { named_options }
+      define_method(:default_options) { default_options }
     end
   end
 
@@ -21,7 +23,7 @@ class Crave::Dependency::Options
     name = name.to_s
 
     if named_options.include?(name)
-      options_hash[name]
+      options_hash.fetch(name) { default_options[name] }
     elsif name.end_with?("=") && named_options.include?(name[0..-2]) && args.length == 1
       options_hash[name[0..-2]] = args.first
     end

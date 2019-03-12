@@ -7,14 +7,14 @@ describe Crave::Dependency::Options do
   end
 
   it "creates readers" do
-    options_klass = Crave::Dependency::Options.class_factory(:foo, :bar)
+    options_klass = Crave::Dependency::Options.class_factory([:foo, :bar])
     options = options_klass.new(:foo => 1, 'bar' => 2)
     options.foo.should == 1
     options.bar.should == 2
   end
 
   it "creates setters" do
-    options_klass = Crave::Dependency::Options.class_factory(:foo, :bar)
+    options_klass = Crave::Dependency::Options.class_factory([:foo, :bar])
     options = options_klass.new(foo: 1)
     options.foo = 111
     options.bar = 222

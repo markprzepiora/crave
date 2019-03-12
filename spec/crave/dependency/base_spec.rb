@@ -21,4 +21,16 @@ describe Crave::Dependency::Base do
     dependency = klass.new(foo: 'xxx')
     dependency.options.foo.should == 'xxx'
   end
+
+  it 'allows default options to be set' do
+    klass = Class.new(Crave::Dependency::Base) do
+      options :foo, where: ['/usr/bin'], bar: 123
+    end
+
+    dependency = klass.new
+
+    dependency.options.foo.should == nil
+    dependency.options.where.should == ['/usr/bin']
+    dependency.options.bar.should == 123
+  end
 end
