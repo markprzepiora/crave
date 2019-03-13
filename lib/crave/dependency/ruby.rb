@@ -1,4 +1,5 @@
 require 'crave/dependency/base'
+require 'crave/dependency/base/versioned_installation'
 require 'open3'
 
 class Crave::Dependency::Ruby < Crave::Dependency::Base
@@ -25,21 +26,8 @@ class Crave::Dependency::Ruby < Crave::Dependency::Base
     system_out(cmd, "--version") =~ /^ruby \d/
   end
 
-  class Installation
-    attr_reader :exe
-
-    def initialize(ruby_executable)
-      @exe = ruby_executable
-    end
-
-    def match?(*version_specifier)
-      Gem::Requirement.new(*version_specifier).satisfied_by?(version)
-    end
-
+  class Installation < Crave::Dependency::Base::VersionedInstallation
     def to_dependency
-    end
-
-    def ==(other_ruby)
     end
 
     def to_envrc
@@ -47,21 +35,8 @@ class Crave::Dependency::Ruby < Crave::Dependency::Base
 
     private
 
-    def version_string
-      @version_string ||= [system_out(exe, "--disable-gems", "-e", "puts RUBY_VERSION").chomp]
-      @version_string[0]
-    end
-
-    def version
-      @version ||= begin
-        Gem::Version.create(version_string)
-      rescue ArgumentError => e
-        Gem::Version.create("0.0")
-      end
-    end
-
-    def system_out(*args)
-      Open3.capture2(*args).first
+    def version_args
+      [ "--disable-gems", "-e", "puts RUBY_VERSION" ]
     end
   end
 end

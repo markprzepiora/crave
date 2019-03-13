@@ -1,4 +1,5 @@
 require 'crave/dependency/base'
+require 'crave/dependency/base/versioned_installation'
 require 'open3'
 
 class Crave::Dependency::Postgres < Crave::Dependency::Base
@@ -27,21 +28,8 @@ class Crave::Dependency::Postgres < Crave::Dependency::Base
     system_out(cmd, "--version").include?('postgres (PostgreSQL)')
   end
 
-  class Installation
-    attr_reader :exe
-
-    def initialize(postgres_executable)
-      @exe = postgres_executable
-    end
-
-    def match?(*version_specifier)
-      Gem::Requirement.new(*version_specifier).satisfied_by?(version)
-    end
-
+  class Installation < Crave::Dependency::Base::VersionedInstallation
     def to_dependency
-    end
-
-    def ==(other_ruby)
     end
 
     def to_envrc
@@ -49,25 +37,8 @@ class Crave::Dependency::Postgres < Crave::Dependency::Base
 
     private
 
-    def version_string
-      @version_string ||= begin
-        out = system_out(exe, "--version").chomp
-        match = out.match(%r{^postgres \(PostgreSQL\) ([0-9\.]+)})
-        [(match && match.captures.first) || "0.0"]
-      end
-      @version_string[0]
-    end
-
-    def version
-      @version ||= begin
-        Gem::Version.create(version_string)
-      rescue ArgumentError => e
-        Gem::Version.create("0.0")
-      end
-    end
-
-    def system_out(*args)
-      Open3.capture2(*args).first
+    def version_regex
+      %r{^postgres \(PostgreSQL\) ([0-9\.]+)}
     end
   end
 end
