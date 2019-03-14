@@ -63,11 +63,14 @@ describe Crave::Dependency::Ruby do
         end
       end
 
-      let(:installation) { Crave::Dependency::Ruby::Installation.new(system_ruby) }
-      let(:satisfied_dependency) { installation.to_satisfied_dependency }
-      let(:env) { satisfied_dependency.env }
-      let(:commands) { satisfied_dependency.commands }
-      let(:prepend_paths) { satisfied_dependency.prepend_paths }
+      before(:all) do
+        @installation = Crave::Dependency::Ruby::Installation.new(system_ruby)
+        @satisfied_dependency = @installation.to_satisfied_dependency
+      end
+
+      let(:env) { @satisfied_dependency.env }
+      let(:commands) { @satisfied_dependency.commands }
+      let(:prepend_paths) { @satisfied_dependency.prepend_paths }
 
       it "sets environment variables" do
         env.keys.should match_array([
