@@ -1,6 +1,6 @@
-require_relative '../base'
+require_relative 'installation'
 
-class Crave::Dependency::Base::VersionedInstallation
+class Crave::Dependency::Base::VersionedInstallation < Crave::Dependency::Base::Installation
   attr_reader :exe
 
   def initialize(exe)
@@ -44,9 +44,5 @@ class Crave::Dependency::Base::VersionedInstallation
 
   def version_regex
     /(.*)/
-  end
-
-  def system_out(*args)
-    Open3.capture2(*args).first
   end
 end
