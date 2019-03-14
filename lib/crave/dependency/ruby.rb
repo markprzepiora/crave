@@ -1,5 +1,7 @@
 require 'crave/dependency/base'
 require 'crave/dependency/base/versioned_installation'
+require 'crave/satisfied_dependency'
+require 'json'
 require 'open3'
 
 class Crave::Dependency::Ruby < Crave::Dependency::Base
@@ -27,7 +29,32 @@ class Crave::Dependency::Ruby < Crave::Dependency::Base
   end
 
   class Installation < Crave::Dependency::Base::VersionedInstallation
-    def to_dependency
+    def to_satisfied_dependency
+      commands = find_commands('ruby', exe, %w( erb gem irb rake rdoc ri ruby ))
+
+      code = %q<
+        env = {}
+        env['RUBY_ENGINE'] = Object.const_defined?(:RUBY_ENGINE) ? RUBY_ENGINE : 'ruby'
+        env['RUBY_VERSION'] = RUBY_VERSION
+
+        begin
+          require 'rubygems'
+          env['GEM_ROOT'] = Gem.default_dir
+        rescue LoadError
+        end
+
+        puts JSON.pretty_generate(env)
+      >
+
+      env = JSON.load(system_out(exe, "-rjson", "-e", code))
+      env['GEM_HOME'] = File.join(Dir.home, ".gem", env['RUBY_ENGINE'], env['RUBY_VERSION'])
+      env['GEM_PATH'] = "#{env['GEM_HOME']}:#{env['GEM_ROOT']}"
+      env
+
+      Crave::SatisfiedDependency.new(:ruby).
+        add_commands(commands).
+        add_env(env).
+        add_prepend_paths(File.join(env['GEM_HOME'], 'bin'), File.join(env['GEM_ROOT'], 'bin'))
     end
 
     def to_envrc

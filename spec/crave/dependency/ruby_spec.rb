@@ -49,5 +49,51 @@ describe Crave::Dependency::Ruby do
       installation.should be_match('>= 2.4', '< 3')
       installation.should_not be_match('>= 2.4', '< 2.5')
     end
+
+    describe "#to_satisfied_dependency" do
+      # These tests uses whatever the system ruby currently has. This *ought*
+      # to work because, well, we're running these tests with something!
+      def system_ruby
+        system_paths = ENV['PATH'].split(":")
+        system_paths.map do |dir|
+          File.join(dir, 'ruby')
+        end.find do |ruby_path|
+          File.exists?(ruby_path) &&
+          File.executable?(ruby_path)
+        end
+      end
+
+      let(:installation) { Crave::Dependency::Ruby::Installation.new(system_ruby) }
+      let(:satisfied_dependency) { installation.to_satisfied_dependency }
+      let(:env) { satisfied_dependency.env }
+      let(:commands) { satisfied_dependency.commands }
+      let(:prepend_paths) { satisfied_dependency.prepend_paths }
+
+      it "sets environment variables" do
+        env.keys.should match_array([
+          'RUBY_ENGINE', 'RUBY_VERSION', 'GEM_ROOT', 'GEM_HOME', 'GEM_PATH'
+        ])
+        env['RUBY_ENGINE'].should == 'ruby'
+        env['RUBY_VERSION'].should =~ /^\d/
+        File.directory?(env['GEM_ROOT']).should == true
+        File.directory?(env['GEM_HOME']).should == true
+
+        env['GEM_PATH'].split(':').each do |path|
+          File.directory?(path).should == true
+        end
+      end
+
+      it "sets commands" do
+        commands.map(&:name).should match_array(
+          %w( erb gem irb rake rdoc ri ruby ))
+      end
+
+      it "sets the prepend_paths" do
+        prepend_paths.length.should > 0
+        prepend_paths.each do |path|
+          path.should include('gem')
+        end
+      end
+    end
   end
 end

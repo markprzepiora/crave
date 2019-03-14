@@ -29,7 +29,7 @@ class Crave::Dependency::Postgres < Crave::Dependency::Base
   end
 
   class Installation < Crave::Dependency::Base::VersionedInstallation
-    def to_dependency
+    def to_satisfied_dependency
     end
 
     def to_envrc
