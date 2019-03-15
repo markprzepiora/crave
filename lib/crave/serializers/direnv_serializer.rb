@@ -1,6 +1,15 @@
 require_relative '../serializers'
 
 module Crave::Serializers::DotenvSerializer
+  def self.serialize_many(dependencies)
+    dependencies.map do |dependency|
+      serialize(dependency)
+    end.join("\n") +
+    "\n" +
+    "# Finally, add the .bin directory to the path\n" +
+    "PATH_add .bin\n"
+  end
+
   def self.serialize(satisfied_dependency)
     env_string = satisfied_dependency.env.map do |key, value|
       "export #{key}=#{bash_quote(value)}\n"
