@@ -1,4 +1,5 @@
 require_relative '../crave'
+require_relative 'serializers/direnv_serializer'
 
 class Crave::DependenciesFile
   attr_reader :evaluated_dependencies
@@ -18,6 +19,10 @@ class Crave::DependenciesFile
 
   def complete?
     true
+  end
+
+  def to_envrc
+    Crave::Serializers::DirenvSerializer.serialize_many([])
   end
 
   def self.from_text(str)

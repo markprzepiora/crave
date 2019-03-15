@@ -1,5 +1,9 @@
 require "crave/version"
 
 module Crave
-  # Your code goes here...
+  DEPENDENCIES = {}
+
+  def self.register_dependency(name, klass)
+    DEPENDENCIES[name.to_s] = klass
+  end
 end
