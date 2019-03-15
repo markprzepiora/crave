@@ -1,7 +1,22 @@
----
 sudo: false
 language: ruby
 cache: bundler
-rvm:
-  - 2.4.1
-before_install: gem install bundler -v 1.16.3
+
+matrix:
+  include:
+  - rvm: ruby-head
+    gemfile: Gemfile
+  - rvm: 2.5
+    gemfile: Gemfile
+  - rvm: 2.4
+    gemfile: Gemfile
+  - rvm: 2.3
+    gemfile: Gemfile
+  - rvm: 2.2
+    gemfile: Gemfile
+  - rvm: 2.1
+    gemfile: Gemfile
+  - rvm: 2.0
+    gemfile: Gemfile
+
+script: bundle exec rspec spec
