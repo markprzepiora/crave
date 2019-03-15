@@ -1,11 +1,11 @@
 require 'crave/serializers/direnv_serializer'
 require 'crave/satisfied_dependency'
 
-describe Crave::Serializers::DotenvSerializer do
+describe Crave::Serializers::DirenvSerializer do
   describe ".serialize" do
     it "serializes a trivial satisfied dependency" do
       satisfied_dependency = Crave::SatisfiedDependency.new(:foo)
-      envrc_string = Crave::Serializers::DotenvSerializer.serialize(satisfied_dependency)
+      envrc_string = Crave::Serializers::DirenvSerializer.serialize(satisfied_dependency)
 
       envrc_string.should include("# foo\n")
       envrc_string.should include("mkdir -p .bin\n")
@@ -15,7 +15,7 @@ describe Crave::Serializers::DotenvSerializer do
       satisfied_dependency =
         Crave::SatisfiedDependency.new(:foo).
         add_env({ SOME_VAR: 'foo bar "baz"' })
-      envrc_string = Crave::Serializers::DotenvSerializer.serialize(satisfied_dependency)
+      envrc_string = Crave::Serializers::DirenvSerializer.serialize(satisfied_dependency)
 
       envrc_string.should include('export SOME_VAR="foo bar \"baz\""' + "\n")
     end
@@ -24,7 +24,7 @@ describe Crave::Serializers::DotenvSerializer do
       satisfied_dependency =
         Crave::SatisfiedDependency.new(:foo).
         add_commands(ruby: '/usr/bin/ruby')
-      envrc_string = Crave::Serializers::DotenvSerializer.serialize(satisfied_dependency)
+      envrc_string = Crave::Serializers::DirenvSerializer.serialize(satisfied_dependency)
 
       envrc_string.should include('ln -sf "/usr/bin/ruby" ".bin/ruby"' + "\n")
     end
@@ -33,7 +33,7 @@ describe Crave::Serializers::DotenvSerializer do
       satisfied_dependency =
         Crave::SatisfiedDependency.new(:foo).
         add_prepend_paths("/foo/bar/baz")
-      envrc_string = Crave::Serializers::DotenvSerializer.serialize(satisfied_dependency)
+      envrc_string = Crave::Serializers::DirenvSerializer.serialize(satisfied_dependency)
 
       envrc_string.should include('PATH_add "/foo/bar/baz"' + "\n")
     end
@@ -43,7 +43,7 @@ describe Crave::Serializers::DotenvSerializer do
     it "serializes all given satisfied dependencies and adds the .bin directory to the path" do
       satisfied_dependency_1 = Crave::SatisfiedDependency.new(:foo)
       satisfied_dependency_2 = Crave::SatisfiedDependency.new(:bar)
-      envrc_string = Crave::Serializers::DotenvSerializer.serialize_many(
+      envrc_string = Crave::Serializers::DirenvSerializer.serialize_many(
         [satisfied_dependency_1, satisfied_dependency_2])
 
       envrc_string.should == <<-TEXT

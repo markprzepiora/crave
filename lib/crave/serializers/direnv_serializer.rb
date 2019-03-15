@@ -1,6 +1,6 @@
 require_relative '../serializers'
 
-module Crave::Serializers::DotenvSerializer
+module Crave::Serializers::DirenvSerializer
   def self.serialize_many(dependencies)
     dependencies.map do |dependency|
       serialize(dependency)
