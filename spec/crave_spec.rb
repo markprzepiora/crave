@@ -8,7 +8,7 @@ describe Crave do
   describe ".register_dependency" do
     it "works" do
       Crave.register_dependency(:ruby, Crave::Dependency::Ruby)
-      Crave::DEPENDENCIES['ruby'].should == Crave::Dependency::Ruby
+      Crave::DEPENDENCY_KLASSES['ruby'].should == Crave::Dependency::Ruby
     end
   end
 end

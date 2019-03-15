@@ -5,6 +5,7 @@ require 'crave/satisfied_dependency'
 describe Crave::DependenciesFile do
   it "evaluates a trivial file" do
     deps = Crave::DependenciesFile.from_text("").evaluate
+    deps.dependencies.should == []
     deps.evaluated_dependencies.should == []
     deps.errors.should == []
     deps.should be_complete
@@ -15,6 +16,8 @@ PATH_add .bin
   end
 
   class GoodDependency < Crave::Dependency::Base
+    options :foo
+
     def find_installations
       [Installation.new]
     end
@@ -34,10 +37,27 @@ PATH_add .bin
     Crave.register_dependency(:good, GoodDependency)
 
     dependencies_file_text = <<-TEXT
-      dependency 'good', '>= 2'
+      dependency 'good', '>= 2', foo: 123
     TEXT
 
     deps = Crave::DependenciesFile.from_text(dependencies_file_text).evaluate
+
+    deps.dependencies.length.should == 1
+
+    dependency = deps.dependencies.first
+    dependency.options.version.should == ['>= 2']
+    dependency.options.foo.should == 123
+  end
+
+  it "resolves a simple file's dependencies" do
+    Crave.register_dependency(:good, GoodDependency)
+
+    dependencies_file_text = <<-TEXT
+      dependency 'good', '>= 2', foo: 123
+    TEXT
+
+    deps = Crave::DependenciesFile.from_text(dependencies_file_text).evaluate
+
     deps.to_envrc.strip.should == <<-TEXT.strip
 # good
 export FOO="bar"
