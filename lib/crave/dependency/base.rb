@@ -1,7 +1,10 @@
 require_relative '../dependency'
 require_relative '../find_executables'
+require_relative '../support'
 require_relative 'options'
 require 'open3'
+
+using Crave::Support
 
 class Crave::Dependency::Base
   class << self
@@ -18,14 +21,14 @@ class Crave::Dependency::Base
     end
 
     def default_options=(hash)
-      @default_options = hash.map{ |k,v| [k.to_s, v] }.to_h
+      @default_options = hash.stringify_keys
       @option_names = (@option_names || []) | hash.keys.map(&:to_s)
     end
   end
 
   def self.options(*names)
     defaults = if names.last.is_a?(Hash)
-      names.pop.map{ |k,v| [k.to_s, v] }.to_h
+      names.pop.stringify_keys
     else
       {}
     end

@@ -1,4 +1,7 @@
 require_relative '../dependency'
+require_relative '../support'
+
+using Crave::Support
 
 class Crave::Dependency::Options
   attr_reader :options_hash
@@ -22,7 +25,7 @@ class Crave::Dependency::Options
   end
 
   def self.class_factory(named_options = [], default_options = {})
-    default_options = default_options.map{ |k,v| [k.to_s, v] }.to_h
+    default_options = default_options.stringify_keys
     named_options = named_options.dup.map(&:to_s) | default_options.keys
 
     Class.new(self) do

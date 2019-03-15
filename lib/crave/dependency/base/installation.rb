@@ -1,4 +1,7 @@
 require_relative '../base'
+require_relative '../../support'
+
+using Crave::Support
 
 class Crave::Dependency::Base::Installation
   private
