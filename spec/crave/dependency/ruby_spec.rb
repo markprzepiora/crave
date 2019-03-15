@@ -79,10 +79,10 @@ describe Crave::Dependency::Ruby do
         env['RUBY_ENGINE'].should == 'ruby'
         env['RUBY_VERSION'].should =~ /^\d/
         File.directory?(env['GEM_ROOT']).should == true
-        File.directory?(env['GEM_HOME']).should == true
+        env['GEM_HOME'].should start_with '/'
 
         env['GEM_PATH'].split(':').each do |path|
-          File.directory?(path).should == true
+          path.should include('gem')
         end
       end
 
