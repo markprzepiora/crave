@@ -1,7 +1,11 @@
 require 'open3'
 
 module Crave::FindExecutables
-  def self.find_executables(cmd_or_cmds, where:)
+  def self.find_executables(cmd_or_cmds, where: nil)
+    if where.nil?
+      fail ArgumentError, '`where` must be a directory or an array of directories'
+    end
+
     return to_enum(__callee__, cmd_or_cmds, where: where).lazy unless block_given?
 
     cmds = Array(cmd_or_cmds)
