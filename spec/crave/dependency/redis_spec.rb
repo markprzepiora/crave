@@ -49,5 +49,26 @@ describe Crave::Dependency::Redis do
       installation.should be_match('>= 4', '< 5')
       installation.should_not be_match('>= 4', '< 4.0.9')
     end
+
+    describe "#to_satisfied_dependency" do
+      let(:installation) { Crave::Dependency::Redis::Installation.new(fixture_path('redis-3.1/redis-server')) }
+      let(:satisfied_dependency) { installation.to_satisfied_dependency }
+      let(:env) { satisfied_dependency.env }
+      let(:commands) { satisfied_dependency.commands }
+      let(:prepend_paths) { satisfied_dependency.prepend_paths }
+
+      it "does not set any environment variables" do
+        env.should == {}
+      end
+
+      it "sets commands" do
+        commands.map(&:name).should match_array(
+          %w( redis-cli redis-server ))
+      end
+
+      it "does not set any PATHs" do
+        prepend_paths.length.should == 0
+      end
+    end
   end
 end

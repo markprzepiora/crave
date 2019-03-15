@@ -57,9 +57,6 @@ class Crave::Dependency::Ruby < Crave::Dependency::Base
         add_prepend_paths(File.join(env['GEM_HOME'], 'bin'), File.join(env['GEM_ROOT'], 'bin'))
     end
 
-    def to_envrc
-    end
-
     private
 
     def version_args

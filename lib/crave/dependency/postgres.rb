@@ -30,9 +30,9 @@ class Crave::Dependency::Postgres < Crave::Dependency::Base
 
   class Installation < Crave::Dependency::Base::VersionedInstallation
     def to_satisfied_dependency
-    end
-
-    def to_envrc
+      commands = find_commands('postgres', exe,
+        %w(createdb createuser dropdb initdb pg_dump pg_restore postgres psql))
+      Crave::SatisfiedDependency.new(:postgres).add_commands(commands)
     end
 
     private

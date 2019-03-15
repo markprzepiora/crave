@@ -23,9 +23,8 @@ class Crave::Dependency::Redis < Crave::Dependency::Base
 
   class Installation < Crave::Dependency::Base::VersionedInstallation
     def to_satisfied_dependency
-    end
-
-    def to_envrc
+      commands = find_commands('redis-server', exe, %w( redis-server redis-cli ))
+      Crave::SatisfiedDependency.new(:redis).add_commands(commands)
     end
 
     private

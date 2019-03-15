@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+echo "redis-cli 3.1"
