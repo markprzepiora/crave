@@ -10,6 +10,10 @@ class Crave::Dependency::Base::Installation
     Open3.capture2(*args).first
   end
 
+  def satisfies_dependency?(dependency)
+    true
+  end
+
   # Here is the problem we're solving:
   #
   # There are multiple ways a program may be symlinked.
