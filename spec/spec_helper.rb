@@ -10,6 +10,8 @@ RSpec.configure do |config|
   end
 end
 
+RSpec::Matchers.alias_matcher :satisfy_dependency, :be_satisfies_dependency
+
 def fixture_path(path)
   File.join(__dir__, 'fixtures', path)
 end

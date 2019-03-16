@@ -7,8 +7,8 @@ class Crave::Dependency::Base::VersionedInstallation < Crave::Dependency::Base::
     @exe = exe
   end
 
-  def match?(*version_specifier)
-    Gem::Requirement.new(*version_specifier).satisfied_by?(version)
+  def satisfies_dependency?(dependency)
+    Gem::Requirement.new(*dependency.options.version).satisfied_by?(version)
   end
 
   def ==(other)
