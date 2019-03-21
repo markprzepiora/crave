@@ -8,7 +8,7 @@ describe Crave::DependenciesFile do
     deps.dependencies.should == []
     deps.evaluated_dependencies.should == []
     deps.errors.should == []
-    deps.should be_complete
+    deps.should be_satisfied
     deps.to_envrc.strip.should == <<-TEXT.strip
 # Finally, add the .bin directory to the path
 PATH_add .bin
@@ -19,15 +19,16 @@ PATH_add .bin
     options :foo
 
     def find_installations
-      [Installation.new]
+      return to_enum(__callee__).lazy unless block_given?
+      yield Installation.new
     end
 
     class Installation
       def to_satisfied_dependency
-        SatisfiedDependency.new(:foo).add_env({ FOO: 'bar' })
+        Crave::SatisfiedDependency.new(:good).add_env({ FOO: 'bar' })
       end
 
-      def match?
+      def satisfies_dependency?(*args)
         true
       end
     end
@@ -43,6 +44,7 @@ PATH_add .bin
     deps = Crave::DependenciesFile.from_text(dependencies_file_text).evaluate
 
     deps.dependencies.length.should == 1
+    deps.should be_satisfied
 
     dependency = deps.dependencies.first
     dependency.options.version.should == ['>= 2']
@@ -57,10 +59,12 @@ PATH_add .bin
     TEXT
 
     deps = Crave::DependenciesFile.from_text(dependencies_file_text).evaluate
+    deps.should be_satisfied
 
     deps.to_envrc.strip.should == <<-TEXT.strip
 # good
 export FOO="bar"
+mkdir -p .bin
 
 # Finally, add the .bin directory to the path
 PATH_add .bin
