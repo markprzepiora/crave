@@ -45,7 +45,7 @@ class Crave::Dependency::Options
   end
 
   def respond_to_missing?(name, include_private = false)
-    named_options.include?(name.to_sym) || super
+    named_options.include?(name.to_s) || super
   end
 
   private

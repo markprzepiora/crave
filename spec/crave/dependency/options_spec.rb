@@ -13,6 +13,15 @@ describe Crave::Dependency::Options do
     options.bar.should == 2
   end
 
+  it "answers true to #respond_to? for the defined attrs" do
+    options_klass = Crave::Dependency::Options.class_factory([:foo, :bar])
+    options = options_klass.new(:foo => 1, 'bar' => 2)
+
+    options.should respond_to(:foo)
+    options.should respond_to(:bar)
+    options.should_not respond_to(:baz)
+  end
+
   it "creates setters" do
     options_klass = Crave::Dependency::Options.class_factory([:foo, :bar])
     options = options_klass.new(foo: 1)
