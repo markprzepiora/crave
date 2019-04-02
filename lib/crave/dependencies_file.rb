@@ -57,7 +57,6 @@ class Crave::DependenciesFile
   end
 
   def satisfied?
-    # binding.pry
     evaluated? && evaluated_dependencies.all?(&:satisfied?)
   end
 
