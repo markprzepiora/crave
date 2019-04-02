@@ -38,7 +38,7 @@ PATH_add .bin
     Crave.register_dependency(:good, GoodDependency)
 
     dependencies_file_text = <<-TEXT
-      dependency 'good', '>= 2', foo: 123
+      dependency 'good', '>= 2'
     TEXT
 
     deps = Crave::DependenciesFile.from_text(dependencies_file_text).evaluate
@@ -48,7 +48,39 @@ PATH_add .bin
 
     dependency = deps.dependencies.first
     dependency.options.version.should == ['>= 2']
-    dependency.options.foo.should == 123
+  end
+
+  it "parses a simple dependency without any version spec or other options" do
+    Crave.register_dependency(:good, GoodDependency)
+
+    dependencies_file_text = <<-TEXT
+      dependency 'good'
+    TEXT
+
+    deps = Crave::DependenciesFile.from_text(dependencies_file_text).evaluate
+
+    deps.dependencies.length.should == 1
+    deps.should be_satisfied
+
+    dependency = deps.dependencies.first
+    dependency.options.version.should == []
+  end
+
+  it "parses a dependency with only options" do
+    Crave.register_dependency(:good, GoodDependency)
+
+    dependencies_file_text = <<-TEXT
+      dependency 'good', foo: 999
+    TEXT
+
+    deps = Crave::DependenciesFile.from_text(dependencies_file_text).evaluate
+
+    deps.dependencies.length.should == 1
+    deps.should be_satisfied
+
+    dependency = deps.dependencies.first
+    dependency.options.version.should == []
+    dependency.options.foo.should == 999
   end
 
   it "resolves a simple file's dependencies" do

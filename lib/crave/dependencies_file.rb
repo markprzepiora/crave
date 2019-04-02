@@ -2,15 +2,29 @@ require_relative '../crave'
 require_relative 'serializers/direnv_serializer'
 
 class Crave::DependenciesFile
+  # @return [String] The contents of the dependencies file.
   attr_reader :text
+
+  # @return [Array<Crave::Dependency::Base>] The dependencies listed in the
+  #   `text`, parsed as Ruby objects.
   attr_reader :dependencies
+
+  # @return [Array<Crave::DependenciesFile::EvaluatedDependency>] The result of
+  #   attempting to evaluate the `dependencies` above. Each evaluated
+  #   dependency is populated with the dependency, as well as all discovered
+  #   installations of the dependency program, as well as, possibly, an
+  #   installation that satisfies the dependency requirements.
   attr_reader :evaluated_dependencies
 
+  # An instance of this class is the context in which the dependencies file is
+  # evaluated. This defines the `dependency` method that is used in the
+  # dependencies file.
   class DefineDependenciesContext
     def initialize(dependencies_file)
       @dependencies_file = dependencies_file
     end
 
+    # @return [void]
     def dependency(name, *version_and_options)
       options = if version_and_options.last.is_a?(Hash)
         version_and_options.pop
