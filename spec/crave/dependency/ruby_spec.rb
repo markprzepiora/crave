@@ -86,7 +86,7 @@ describe Crave::Dependency::Ruby do
         env['GEM_HOME'].should start_with '/'
 
         env['GEM_PATH'].split(':').each do |path|
-          path.should include('gem')
+          path.should match(/gem|Gems/)
         end
       end
 
@@ -98,7 +98,7 @@ describe Crave::Dependency::Ruby do
       it "sets the prepend_paths" do
         prepend_paths.length.should > 0
         prepend_paths.each do |path|
-          path.should include('gem')
+          path.should match(/gem|Gems/)
         end
       end
     end
