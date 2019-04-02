@@ -1,5 +1,6 @@
 require 'crave/dependencies_file'
 require 'crave/dependency/base'
+require 'crave/dependency/ruby'
 require 'crave/satisfied_dependency'
 
 describe Crave::DependenciesFile do
@@ -20,10 +21,22 @@ PATH_add .bin
 
     def find_installations
       return to_enum(__callee__).lazy unless block_given?
-      yield Installation.new
+
+      yield UnsatisfyingInstallation.new
+      yield SatisfyingInstallation.new
     end
 
-    class Installation
+    class UnsatisfyingInstallation
+      def to_satisfied_dependency
+        Crave::SatisfiedDependency.new(:good).add_env({ FOO: 'baz' })
+      end
+
+      def satisfies_dependency?(*args)
+        false
+      end
+    end
+
+    class SatisfyingInstallation
       def to_satisfied_dependency
         Crave::SatisfiedDependency.new(:good).add_env({ FOO: 'bar' })
       end
@@ -101,5 +114,21 @@ mkdir -p .bin
 # Finally, add the .bin directory to the path
 PATH_add .bin
     TEXT
+  end
+
+  it "resolves the system Ruby dependency (integration test)" do
+    Crave.register_dependency(:ruby, Crave::Dependency::Ruby)
+
+    dependencies_file_text = <<-TEXT
+      dependency 'ruby'
+    TEXT
+
+    deps = Crave::DependenciesFile.from_text(dependencies_file_text).evaluate
+    deps.should be_satisfied
+    envrc_lines = deps.to_envrc.lines.map(&:chomp)
+    envrc_lines.should include('# ruby')
+    envrc_lines.should include(match('export GEM_ROOT='))
+    envrc_lines.should include(match('export GEM_HOME='))
+    envrc_lines.should include(match('export GEM_PATH='))
   end
 end

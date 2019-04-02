@@ -95,7 +95,7 @@ class Crave::DependenciesFile
 
     def self.evaluate(dep)
       found_installations = []
-      dep.find_installations do |installation|
+      dep.find_installations.each do |installation|
         found_installations << installation
 
         if installation.satisfies_dependency?(dep)
