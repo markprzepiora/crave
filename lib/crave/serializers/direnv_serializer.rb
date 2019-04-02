@@ -31,7 +31,6 @@ module Crave::Serializers::DirenvSerializer
     commands_string
   end
 
-  private_class_method \
   def self.bash_quote(string)
     '"' +
     string.
@@ -42,4 +41,5 @@ module Crave::Serializers::DirenvSerializer
       gsub('!', '\!') +
     '"'
   end
+  private_class_method :bash_quote
 end
