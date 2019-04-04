@@ -1,6 +1,6 @@
 require_relative '../serializers'
 
-module Crave::Serializers::DotenvSerializer
+module Crave::Serializers::DirenvSerializer
   def self.serialize_many(dependencies)
     dependencies.map do |dependency|
       serialize(dependency)
@@ -31,7 +31,6 @@ module Crave::Serializers::DotenvSerializer
     commands_string
   end
 
-  private_class_method \
   def self.bash_quote(string)
     '"' +
     string.
@@ -42,4 +41,5 @@ module Crave::Serializers::DotenvSerializer
       gsub('!', '\!') +
     '"'
   end
+  private_class_method :bash_quote
 end

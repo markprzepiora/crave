@@ -25,29 +25,33 @@ describe Crave::Dependency::Ruby do
   end
 
   describe Crave::Dependency::Ruby::Installation do
+    def ruby_dependency(*version)
+      Crave::Dependency::Ruby.new(version: version)
+    end
+
     it "reads the version number" do
       installation = Crave::Dependency::Ruby::Installation.new(fixture_path('ruby-2.4.0/ruby'))
 
-      installation.should be_match('2.4.0')
-      installation.should be_match('2.4')
+      installation.should satisfy_dependency(ruby_dependency('2.4.0'))
+      installation.should satisfy_dependency(ruby_dependency('2.4'))
     end
 
     it "matches exact version numbers" do
       installation = Crave::Dependency::Ruby::Installation.new(fixture_path('ruby-2.5.1/ruby'))
 
-      installation.should_not be_match('2.4.1')
-      installation.should_not be_match('2.5.0')
-      installation.should_not be_match('2.5')
+      installation.should_not satisfy_dependency(ruby_dependency('2.4.1'))
+      installation.should_not satisfy_dependency(ruby_dependency('2.5.0'))
+      installation.should_not satisfy_dependency(ruby_dependency('2.5'))
     end
 
     it "matches version specifiers" do
       installation = Crave::Dependency::Ruby::Installation.new(fixture_path('ruby-2.5.1/ruby'))
 
-      installation.should_not be_match('~> 2.4.1')
-      installation.should be_match('~> 2.4')
-      installation.should be_match('~> 2.5.0')
-      installation.should be_match('>= 2.4', '< 3')
-      installation.should_not be_match('>= 2.4', '< 2.5')
+      installation.should_not satisfy_dependency(ruby_dependency('~> 2.4.1'))
+      installation.should satisfy_dependency(ruby_dependency('~> 2.4'))
+      installation.should satisfy_dependency(ruby_dependency('~> 2.5.0'))
+      installation.should satisfy_dependency(ruby_dependency('>= 2.4', '< 3'))
+      installation.should_not satisfy_dependency(ruby_dependency('>= 2.4', '< 2.5'))
     end
 
     describe "#to_satisfied_dependency" do
@@ -82,7 +86,7 @@ describe Crave::Dependency::Ruby do
         env['GEM_HOME'].should start_with '/'
 
         env['GEM_PATH'].split(':').each do |path|
-          path.should include('gem')
+          path.should match(/gem|Gems/)
         end
       end
 
@@ -94,7 +98,7 @@ describe Crave::Dependency::Ruby do
       it "sets the prepend_paths" do
         prepend_paths.length.should > 0
         prepend_paths.each do |path|
-          path.should include('gem')
+          path.should match(/gem|Gems/)
         end
       end
     end

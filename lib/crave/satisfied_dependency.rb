@@ -27,12 +27,8 @@ class Crave::SatisfiedDependency
     @prepend_paths = []
   end
 
-  def commands_valid?
-    !invalid_commands.any?
-  end
-
-  def invalid_commands
-    commands.reject(&:valid?)
+  def valid?
+    commands_valid?
   end
 
   def errors
@@ -65,5 +61,15 @@ class Crave::SatisfiedDependency
   def add_prepend_paths(*paths)
     @prepend_paths = [*paths, *@prepend_paths]
     self
+  end
+
+  private
+
+  def commands_valid?
+    !invalid_commands.any?
+  end
+
+  def invalid_commands
+    commands.reject(&:valid?)
   end
 end

@@ -25,29 +25,33 @@ describe Crave::Dependency::Postgres do
   end
 
   describe Crave::Dependency::Postgres::Installation do
+    def postgres_dependency(*version)
+      Crave::Dependency::Postgres.new(version: version)
+    end
+
     it "reads the version number" do
       installation = Crave::Dependency::Postgres::Installation.new(fixture_path('postgres-9.4.21/postgres'))
 
-      installation.should be_match('9.4.21')
-      installation.should_not be_match('9.4')
+      installation.should satisfy_dependency(postgres_dependency('9.4.21'))
+      installation.should_not satisfy_dependency(postgres_dependency('9.4'))
     end
 
     it "matches exact version numbers" do
       installation = Crave::Dependency::Postgres::Installation.new(fixture_path('postgres-9.5.21/postgres'))
 
-      installation.should_not be_match('9.4.1')
-      installation.should_not be_match('9.5.0')
-      installation.should_not be_match('9.5')
+      installation.should_not satisfy_dependency(postgres_dependency('9.4.1'))
+      installation.should_not satisfy_dependency(postgres_dependency('9.5.0'))
+      installation.should_not satisfy_dependency(postgres_dependency('9.5'))
     end
 
     it "matches version specifiers" do
       installation = Crave::Dependency::Postgres::Installation.new(fixture_path('postgres-9.5.21/postgres'))
 
-      installation.should_not be_match('~> 9.4.1')
-      installation.should be_match('~> 9.4')
-      installation.should be_match('~> 9.5.0')
-      installation.should be_match('>= 9.4', '< 10')
-      installation.should_not be_match('>= 9.4', '< 9.5')
+      installation.should_not satisfy_dependency(postgres_dependency('~> 9.4.1'))
+      installation.should satisfy_dependency(postgres_dependency('~> 9.4'))
+      installation.should satisfy_dependency(postgres_dependency('~> 9.5.0'))
+      installation.should satisfy_dependency(postgres_dependency('>= 9.4', '< 10'))
+      installation.should_not satisfy_dependency(postgres_dependency('>= 9.4', '< 9.5'))
     end
 
     describe "#to_satisfied_dependency" do

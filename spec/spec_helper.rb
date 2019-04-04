@@ -1,5 +1,10 @@
 require "bundler/setup"
+
+require 'simplecov'
+SimpleCov.start
+
 require "crave"
+require "pry"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -9,6 +14,8 @@ RSpec.configure do |config|
     c.syntax = :should
   end
 end
+
+RSpec::Matchers.alias_matcher :satisfy_dependency, :be_satisfies_dependency
 
 def fixture_path(path)
   File.join(__dir__, 'fixtures', path)
