@@ -11,7 +11,7 @@ class Crave::Dependency::Ruby < Crave::Dependency::Base
     cmd_names = %w(
       ruby
       ruby1.8 ruby1.9
-      ruby2 ruby2.0 ruby2.1 ruby2.2 ruby2.3 ruby2.4 ruby2.5 ruby2.6 ruby 2.7 ruby2.8 ruby2.9
+      ruby2 ruby2.0 ruby2.1 ruby2.2 ruby2.3 ruby2.4 ruby2.5 ruby2.6 ruby2.7 ruby2.8 ruby2.9
       ruby3 ruby3.0 ruby3.1 ruby3.2
     )
 
