@@ -30,7 +30,7 @@ class Crave::Dependency::Ruby < Crave::Dependency::Base
 
   class Installation < Crave::Dependency::Base::VersionedInstallation
     def to_satisfied_dependency
-      commands = find_commands('ruby', exe, %w( erb gem irb rake rdoc ri ruby ))
+      commands = find_commands('ruby', exe, %w( erb gem irb rdoc ri ruby ))
 
       code = %q<
         env = {}

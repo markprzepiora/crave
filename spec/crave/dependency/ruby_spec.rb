@@ -92,7 +92,7 @@ describe Crave::Dependency::Ruby do
 
       it "sets commands" do
         commands.map(&:name).should match_array(
-          %w( erb gem irb rake rdoc ri ruby ))
+          %w( erb gem irb rdoc ri ruby ))
       end
 
       it "sets the prepend_paths" do
