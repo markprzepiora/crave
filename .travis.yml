@@ -14,18 +14,6 @@ matrix:
     gemfile: Gemfile
   - rvm: 2.6
     gemfile: Gemfile
-  - rvm: 2.5
-    gemfile: Gemfile
-  - rvm: 2.4
-    gemfile: Gemfile
-  - rvm: 2.3
-    gemfile: Gemfile
-  - rvm: 2.2
-    gemfile: Gemfile
-  - rvm: 2.1
-    gemfile: Gemfile
-  - rvm: 2.0
-    gemfile: Gemfile
 script: bundle exec rspec -fd
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

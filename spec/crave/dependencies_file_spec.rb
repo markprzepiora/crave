@@ -123,7 +123,11 @@ PATH_add .bin
       dependency 'ruby'
     TEXT
 
+    require 'pp'
     deps = Crave::DependenciesFile.from_text(dependencies_file_text).evaluate
+    pp deps.evaluated_dependencies
+    pp deps.evaluated_dependencies.map(&:found_installations).flatten(1).map(&:to_satisfied_dependency)
+    pp deps.evaluated_dependencies.map(&:found_installations).flatten(1).map(&:to_satisfied_dependency).map(&:errors)
     deps.should be_satisfied
     envrc_lines = deps.to_envrc.lines.map(&:chomp)
     envrc_lines.should include('# ruby')
