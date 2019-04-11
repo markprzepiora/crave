@@ -30,8 +30,22 @@ class Crave::Dependency::Ruby < Crave::Dependency::Base
 
   class Installation < Crave::Dependency::Base::VersionedInstallation
     def to_satisfied_dependency
-      commands = find_commands('ruby', exe, %w( erb gem irb rdoc ri ruby ))
+      commands = find_commands
+      env = find_env
 
+      Crave::SatisfiedDependency.new(:ruby).
+        add_commands(commands).
+        add_env(env).
+        add_prepend_paths(File.join(env['GEM_HOME'], 'bin'), File.join(env['GEM_ROOT'], 'bin'))
+    end
+
+    private
+
+    def find_commands
+      super('ruby', @exe, %w( erb gem irb rdoc ri ruby ))
+    end
+
+    def find_env
       code = %q<
         env = {}
         env['RUBY_ENGINE'] = Object.const_defined?(:RUBY_ENGINE) ? RUBY_ENGINE : 'ruby'
@@ -46,18 +60,11 @@ class Crave::Dependency::Ruby < Crave::Dependency::Base
         puts JSON.pretty_generate(env)
       >
 
-      env = JSON.load(system_out(exe, "-rjson", "-e", code))
+      env = JSON.load(system_out(@exe, "-rjson", "-e", code))
       env['GEM_HOME'] = File.join(Dir.home, ".gem", env['RUBY_ENGINE'], env['RUBY_VERSION'])
       env['GEM_PATH'] = "#{env['GEM_HOME']}:#{env['GEM_ROOT']}"
       env
-
-      Crave::SatisfiedDependency.new(:ruby).
-        add_commands(commands).
-        add_env(env).
-        add_prepend_paths(File.join(env['GEM_HOME'], 'bin'), File.join(env['GEM_ROOT'], 'bin'))
     end
-
-    private
 
     def version_args
       [ "--disable-gems", "-e", "puts RUBY_VERSION" ]
