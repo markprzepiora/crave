@@ -1,7 +1,10 @@
 require "bundler/setup"
 
 require 'simplecov'
-SimpleCov.start
+SimpleCov.start do
+  add_filter "/spec/"
+  add_filter "lib/crave/support.rb"
+end
 
 require "crave"
 require "pry"
