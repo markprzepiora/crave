@@ -1,5 +1,6 @@
 require_relative '../base'
 require_relative '../../support'
+require_relative '../../../crave'
 
 using Crave::Support
 
@@ -52,6 +53,8 @@ class Crave::Dependency::Base::Installation
   # as "-server" and we would erroneously look for "foo-server-server" and
   # "foo-server" as the commands... If this case ever comes up we can come up
   # with additional heuristics for telling these cases apart.
+  #
+  # @return [Array<Crave::Command>]
   def find_commands(known_command_name, found_command_path, command_names)
     found_command_basename = File.basename(found_command_path)
 
@@ -64,10 +67,7 @@ class Crave::Dependency::Base::Installation
     dir = File.dirname(found_command_path)
 
     command_names.map do |command_name|
-      [
-        command_name,
-        File.join(dir, "#{command_name}#{suffix}")
-      ]
-    end.to_h
+      Crave::Command.new(command_name, File.join(dir, "#{command_name}#{suffix}"))
+    end
   end
 end

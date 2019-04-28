@@ -19,20 +19,18 @@ class Crave::SatisfiedDependency
     commands.map(&:errors).flatten(1)
   end
 
-  def add_commands(hash_or_array)
-    if hash_or_array.empty?
-      return self
+  # @param commands [Array<Crave::Command>]
+  # @return self
+  def add_commands(commands)
+    not_commands = commands.reject do |command|
+      command.is_a?(Crave::Command)
     end
 
-    if hash_or_array.is_a?(Hash)
-      @commands += hash_or_array.map do |name, path|
-        Crave::Command.new(name, path)
-      end
-    elsif hash_or_array.is_a?(Array) && hash_or_array.first.is_a?(Command)
-      @commands += hash_or_array.map{ |cmd| Crave::Command.new(cmd.name, cmd.path) }
-    else
-      fail "cannot add commands from object #{hash_or_array}"
+    if not_commands.any?
+      fail ArgumentError, "#{not_commands.inspect} are not commands"
     end
+
+    @commands += commands
 
     self
   end

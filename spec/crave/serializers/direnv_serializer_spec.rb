@@ -1,5 +1,6 @@
 require 'crave/serializers/direnv_serializer'
 require 'crave/satisfied_dependency'
+require 'crave/command'
 
 describe Crave::Serializers::DirenvSerializer do
   describe ".serialize" do
@@ -21,9 +22,8 @@ describe Crave::Serializers::DirenvSerializer do
     end
 
     it "serializes commands" do
-      satisfied_dependency =
-        Crave::SatisfiedDependency.new(:foo).
-        add_commands(ruby: '/usr/bin/ruby')
+      command = Crave::Command.new('ruby', '/usr/bin/ruby')
+      satisfied_dependency = Crave::SatisfiedDependency.new(:foo).add_commands([command])
       envrc_string = Crave::Serializers::DirenvSerializer.serialize(satisfied_dependency)
 
       envrc_string.should include('ln -sf "/usr/bin/ruby" ".bin/ruby"' + "\n")
