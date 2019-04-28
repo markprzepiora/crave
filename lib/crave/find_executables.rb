@@ -1,3 +1,4 @@
+require 'set'
 require 'open3'
 
 module Crave::FindExecutables
