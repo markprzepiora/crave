@@ -1,6 +1,14 @@
 require "crave/version"
 
 module Crave
+  autoload(:Command, 'crave/command')
+  autoload(:DependenciesFile, 'crave/dependencies_file')
+  autoload(:Dependency, 'crave/dependency')
+  autoload(:FindExecutables, 'crave/find_executables')
+  autoload(:SatisfiedDependency, 'crave/satisfied_dependency')
+  autoload(:Serializers, 'crave/serializers')
+  autoload(:Support, 'crave/support')
+
   DEPENDENCY_KLASSES = {}
 
   def self.register_dependency(name, klass)

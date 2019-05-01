@@ -1,4 +1,4 @@
-require_relative '../serializers'
+require 'crave'
 
 module Crave::Serializers::DirenvSerializer
   def self.serialize_many(dependencies)

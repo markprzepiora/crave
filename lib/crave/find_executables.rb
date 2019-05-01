@@ -1,3 +1,4 @@
+require 'crave'
 require 'set'
 require 'open3'
 

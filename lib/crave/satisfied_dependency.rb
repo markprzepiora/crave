@@ -1,5 +1,4 @@
-require_relative '../crave'
-require_relative 'command'
+require 'crave'
 
 class Crave::SatisfiedDependency
   attr_reader :name, :commands, :env, :prepend_paths

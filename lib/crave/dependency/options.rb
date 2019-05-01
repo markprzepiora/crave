@@ -1,5 +1,4 @@
-require_relative '../dependency'
-require_relative '../support'
+require 'crave'
 
 using Crave::Support
 

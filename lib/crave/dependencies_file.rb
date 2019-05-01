@@ -1,5 +1,4 @@
-require_relative '../crave'
-require_relative 'serializers/direnv_serializer'
+require 'crave'
 
 class Crave::DependenciesFile
   # @return [String] The contents of the dependencies file.

@@ -1,6 +1,4 @@
-require 'crave/dependency/base'
-require 'crave/dependency/base/versioned_installation'
-require 'crave/satisfied_dependency'
+require 'crave'
 require 'open3'
 
 class Crave::Dependency::Redis < Crave::Dependency::Base

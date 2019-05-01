@@ -1,4 +1,4 @@
-require 'crave/dependency/base'
+require 'spec_helper'
 
 describe Crave::Dependency::Base do
   it 'keeps option names separate' do

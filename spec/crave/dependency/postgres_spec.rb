@@ -1,4 +1,4 @@
-require 'crave/dependency/postgres'
+require 'spec_helper'
 require 'fileutils'
 
 describe Crave::Dependency::Postgres do

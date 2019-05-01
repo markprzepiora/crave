@@ -1,4 +1,4 @@
-require 'crave/dependency/options'
+require 'spec_helper'
 
 describe Crave::Dependency::Options do
   it "can be initialized with minimal params" do

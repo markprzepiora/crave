@@ -1,6 +1,4 @@
-require_relative '../base'
-require_relative '../../support'
-require_relative '../../../crave'
+require 'crave'
 
 using Crave::Support
 

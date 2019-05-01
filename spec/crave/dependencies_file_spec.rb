@@ -1,7 +1,4 @@
-require 'crave/dependencies_file'
-require 'crave/dependency/base'
-require 'crave/dependency/ruby'
-require 'crave/satisfied_dependency'
+require 'spec_helper'
 
 describe Crave::DependenciesFile do
   it "evaluates a trivial file" do

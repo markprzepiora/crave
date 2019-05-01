@@ -1,4 +1,4 @@
-require_relative '../crave'
+require 'crave'
 
 class Crave::Command < Struct.new(:name, :path)
   def valid?

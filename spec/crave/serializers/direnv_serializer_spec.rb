@@ -1,6 +1,4 @@
-require 'crave/serializers/direnv_serializer'
-require 'crave/satisfied_dependency'
-require 'crave/command'
+require 'spec_helper'
 
 describe Crave::Serializers::DirenvSerializer do
   describe ".serialize" do

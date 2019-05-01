@@ -1,4 +1,4 @@
-require_relative 'installation'
+require 'crave'
 
 class Crave::Dependency::Base::VersionedInstallation < Crave::Dependency::Base::Installation
   attr_reader :exe

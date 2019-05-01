@@ -1,4 +1,4 @@
-require 'crave/dependency/ruby'
+require 'spec_helper'
 
 describe Crave do
   it "has a version number" do

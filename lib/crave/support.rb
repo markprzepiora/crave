@@ -1,4 +1,4 @@
-require_relative '../crave'
+require 'crave'
 
 module Crave::Support
   refine Hash do

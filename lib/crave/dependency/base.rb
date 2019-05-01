@@ -1,12 +1,12 @@
-require_relative '../dependency'
-require_relative '../find_executables'
-require_relative '../support'
-require_relative 'options'
+require 'crave'
 require 'open3'
 
 using Crave::Support
 
 class Crave::Dependency::Base
+  autoload(:Installation, 'crave/dependency/base/installation')
+  autoload(:VersionedInstallation, 'crave/dependency/base/versioned_installation')
+
   class << self
     def option_names
       @option_names ||= []

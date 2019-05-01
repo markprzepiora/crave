@@ -1,4 +1,4 @@
-require 'crave/dependency/ruby'
+require 'spec_helper'
 require 'fileutils'
 
 describe Crave::Dependency::Ruby do

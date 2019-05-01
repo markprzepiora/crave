@@ -1,4 +1,5 @@
-require_relative '../crave'
+require 'crave'
 
 module Crave::Serializers
+  autoload(:DirenvSerializer, 'crave/serializers/direnv_serializer')
 end
