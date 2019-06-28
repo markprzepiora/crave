@@ -1,8 +1,11 @@
 # typed: true
 require 'crave'
 require 'open3'
+require "sorbet-runtime"
 
 class Crave::Dependency::Postgres < Crave::Dependency::Base
+  extend T::Sig
+
   options where: %w(
     /usr/bin
     /usr/local/bin

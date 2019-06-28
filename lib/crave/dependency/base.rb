@@ -1,10 +1,13 @@
 # typed: false
 require 'crave'
 require 'open3'
+require 'sorbet-runtime'
 
 using Crave::Support
 
 class Crave::Dependency::Base
+  extend T::Sig
+
   autoload(:Installation, 'crave/dependency/base/installation')
   autoload(:VersionedInstallation, 'crave/dependency/base/versioned_installation')
 
@@ -44,6 +47,7 @@ class Crave::Dependency::Base
   options where: []
   options version: []
 
+  sig{ params(options_hash: Hash).void }
   def initialize(options_hash = {})
     @options = Crave::Dependency::Options.class_factory(
       self.class.option_names, self.class.default_options).new(options_hash)
