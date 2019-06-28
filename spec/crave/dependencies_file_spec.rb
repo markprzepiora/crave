@@ -23,7 +23,10 @@ PATH_add .bin
       yield SatisfyingInstallation.new
     end
 
-    class UnsatisfyingInstallation
+    class UnsatisfyingInstallation < Crave::Dependency::Base::Installation
+      def initialize
+      end
+
       def to_satisfied_dependency
         Crave::SatisfiedDependency.new(:good).add_env({ FOO: 'baz' })
       end
@@ -33,7 +36,10 @@ PATH_add .bin
       end
     end
 
-    class SatisfyingInstallation
+    class SatisfyingInstallation < Crave::Dependency::Base::Installation
+      def initialize
+      end
+
       def to_satisfied_dependency
         Crave::SatisfiedDependency.new(:good).add_env({ FOO: 'bar' })
       end

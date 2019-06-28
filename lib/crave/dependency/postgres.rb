@@ -15,10 +15,11 @@ class Crave::Dependency::Postgres < Crave::Dependency::Base
     /usr
   )
 
+  sig{ returns(T::Enumerator[Installation]) }
   def find_installations
     cmd_names = %w( postgres )
 
-    find_executables(cmd_names, where: options.where).select do |cmd|
+    find_executables(cmd_names, where: options.where).lazy.select do |cmd|
       postgres?(cmd)
     end.map do |cmd|
       Installation.new(cmd)

@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 require 'crave'
 require 'open3'
 require 'sorbet-runtime'
@@ -53,12 +53,22 @@ class Crave::Dependency::Base
       self.class.option_names, self.class.default_options).new(options_hash)
   end
 
+  sig{ params(args: String).returns(String) }
   def system_out(*args)
-    Open3.capture2(*args).first
+    T.unsafe(Open3).capture2(*args).first
   end
 
-  def find_executables(*args)
-    Crave::FindExecutables.find_executables(*args)
+  sig{
+    params(cmd_or_cmds: T.any(String, T::Array[String]), where: T.nilable(T::Array[String])).
+    returns(T::Enumerator[String])
+  }
+  def find_executables(cmd_or_cmds, where: nil)
+    Crave::FindExecutables.find_executables(cmd_or_cmds, where: where)
+  end
+
+  sig{ returns(T::Enumerator[Crave::Dependency::Base::Installation]) }
+  def find_installations
+    fail ArgumentError, 'must implement `find_installations`'
   end
 
   def self.inherited(subclass)

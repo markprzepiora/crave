@@ -1,19 +1,29 @@
-# typed: false
+# typed: true
+
 require 'crave'
+require 'sorbet-runtime'
 
 using Crave::Support
 
 class Crave::Dependency::Base::Installation
+  extend T::Sig
+
   private
 
+  sig{ params(args: String).returns(String) }
   def system_out(*args)
     Open3.capture2(*args).first
   end
 
+  sig{ params(dependency: Crave::Dependency::Base).returns(T::Boolean) }
   def satisfies_dependency?(dependency)
     true
   end
 
+  sig{
+    params(known_command_name: String, found_command_path: String, command_names: T::Array[String]).
+    returns(T::Array[Crave::Command])
+  }
   # Here is the problem we're solving:
   #
   # There are multiple ways a program may be symlinked.

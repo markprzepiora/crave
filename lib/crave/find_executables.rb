@@ -2,14 +2,30 @@
 require 'crave'
 require 'set'
 require 'open3'
+require 'sorbet-runtime'
 
 module Crave::FindExecutables
+  extend T::Sig
+
+  sig{
+    params(cmd_or_cmds: T.any(String, T::Array[String]), where: T.nilable(T::Array[String])).
+    returns(T.untyped)
+  }
   def self.find_executables(cmd_or_cmds, where: nil)
+    to_enum(:each_executable, cmd_or_cmds, where: where).lazy
+  end
+
+  sig{
+    params(
+      cmd_or_cmds: T.any(String, T::Array[String]),
+      where: T.nilable(T::Array[String]),
+      block: T.proc.params(arg0: String).void,
+    ).void
+  }
+  def self.each_executable(cmd_or_cmds, where: nil, &block)
     if where.nil?
       fail ArgumentError, '`where` must be a directory or an array of directories'
     end
-
-    return to_enum(__callee__, cmd_or_cmds, where: where).lazy unless block_given?
 
     cmds = Array(cmd_or_cmds)
     where = Array(where).map do |dir|
@@ -29,7 +45,7 @@ module Crave::FindExecutables
       end
     end
 
-    find_files(*where).each do |filepath|
+    find_files(*where) do |filepath|
       next unless \
         cmds.include?(File.basename(filepath)) &&
         File.executable?(filepath) &&
@@ -39,15 +55,18 @@ module Crave::FindExecutables
     end
   end
 
+  sig{ params(cmd: String).returns(T::Array[String]) }
   def self.which_a(cmd)
-    system_out("which", "-a", cmd).lines.map(&:strip).lazy
+    system_out("which", "-a", cmd).lines.map(&:strip)
   end
 
+  sig{ params(args: String).returns(String) }
   def self.system_out(*args)
     Open3.capture2(*args).first
   end
 
-  def self.find_files(*where)
+  sig{ params(where: String, block: T.proc.params(arg0: String).void).void }
+  def self.find_files(*where, &block)
     return to_enum(__callee__, *where).lazy unless block_given?
 
     Open3.popen2("find", *where, *%w( ( -type f -or -type l ) )) do |i, o, thread|
