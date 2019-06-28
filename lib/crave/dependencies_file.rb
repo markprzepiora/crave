@@ -1,3 +1,4 @@
+# typed: true
 require 'crave'
 
 class Crave::DependenciesFile

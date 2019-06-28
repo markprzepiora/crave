@@ -1,3 +1,4 @@
+# typed: true
 require 'crave'
 
 module Crave::Serializers::DirenvSerializer

@@ -1,3 +1,4 @@
+# typed: false
 require 'crave'
 
 class Crave::Dependency::Base::VersionedInstallation < Crave::Dependency::Base::Installation

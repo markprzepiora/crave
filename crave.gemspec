@@ -36,4 +36,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "simplecov", "~> 0.16"
   spec.add_development_dependency "pry"
+  spec.add_development_dependency "sorbet", '0.4.4353'
+  spec.add_dependency "sorbet-runtime", '0.4.4353'
 end

@@ -1,3 +1,4 @@
+# typed: strong
 require 'crave'
 
 module Crave::Serializers

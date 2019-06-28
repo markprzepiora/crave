@@ -1,3 +1,4 @@
+# typed: strong
 module Crave::Dependency
   autoload(:Base, 'crave/dependency/base')
   autoload(:Options, 'crave/dependency/options')

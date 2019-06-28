@@ -1,3 +1,4 @@
+# typed: ignore
 require 'crave'
 
 class Crave::Command < Struct.new(:name, :path)

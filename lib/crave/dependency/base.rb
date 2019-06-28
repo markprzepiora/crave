@@ -1,3 +1,4 @@
+# typed: false
 require 'crave'
 require 'open3'
 

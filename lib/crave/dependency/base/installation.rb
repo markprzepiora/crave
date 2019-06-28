@@ -1,3 +1,4 @@
+# typed: false
 require 'crave'
 
 using Crave::Support
