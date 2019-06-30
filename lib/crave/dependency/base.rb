@@ -62,10 +62,10 @@ class Crave::Dependency::Base
 
   sig{
     params(cmd_or_cmds: T.any(String, T::Array[String]), where: T.nilable(T::Array[String])).
-    returns(T::Enumerator[String])
+    returns(T.untyped)
   }
   def find_executables(cmd_or_cmds, where: nil)
-    Crave::FindExecutables.find_executables(cmd_or_cmds, where: where)
+    Crave::FindExecutables.find_executables(cmd_or_cmds, where: where).lazy
   end
 
   sig{ abstract.returns(T::Enumerator[Crave::Dependency::Base::Installation]) }

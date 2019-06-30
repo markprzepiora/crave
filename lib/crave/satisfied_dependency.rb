@@ -24,30 +24,21 @@ class Crave::SatisfiedDependency
     commands.map(&:errors).flatten(1)
   end
 
-  sig{ params(commands: T::Array[Crave::Command]).returns(Crave::SatisfiedDependency) }
+  sig{ params(commands: T::Array[Crave::Command]).returns(T.self_type) }
   # @param commands [Array<Crave::Command>]
   # @return self
   def add_commands(commands)
-    not_commands = commands.reject do |command|
-      Crave::Command === command
-    end
-
-    if not_commands.any?
-      fail ArgumentError, "#{not_commands.inspect} are not commands"
-    end
-
     @commands += commands
-
     self
   end
 
-  sig{ params(hash: T::Hash[T.any(String, Symbol), String]).returns(Crave::SatisfiedDependency) }
+  sig{ params(hash: T::Hash[T.any(String, Symbol), String]).returns(T.self_type) }
   def add_env(hash)
     @env = @env.merge(hash)
     self
   end
 
-  sig{ params(paths: String).returns(Crave::SatisfiedDependency) }
+  sig{ params(paths: String).returns(T.self_type) }
   def add_prepend_paths(*paths)
     @prepend_paths = [*paths, *@prepend_paths]
     self

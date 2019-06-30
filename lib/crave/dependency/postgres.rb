@@ -28,11 +28,13 @@ class Crave::Dependency::Postgres < Crave::Dependency::Base
 
   private
 
+  sig{ params(cmd: String).returns(T::Boolean) }
   def postgres?(cmd)
     system_out([cmd, "--version"]).include?('postgres (PostgreSQL)')
   end
 
   class Installation < Crave::Dependency::Base::VersionedInstallation
+    sig{ implementation.returns(Crave::SatisfiedDependency) }
     def to_satisfied_dependency
       commands = find_commands('postgres', exe,
         %w(createdb createuser dropdb initdb pg_dump pg_restore postgres psql))
@@ -41,6 +43,7 @@ class Crave::Dependency::Postgres < Crave::Dependency::Base
 
     private
 
+    sig{ returns(Regexp) }
     def version_regex
       %r{^postgres \(PostgreSQL\) ([0-9\.]+)}
     end

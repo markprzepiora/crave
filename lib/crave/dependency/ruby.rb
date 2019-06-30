@@ -1,4 +1,5 @@
 # typed: true
+
 require 'crave'
 require 'json'
 require 'open3'
@@ -43,6 +44,7 @@ class Crave::Dependency::Ruby < Crave::Dependency::Base
 
     private
 
+    sig{ returns(T::Hash[String, String]) }
     def find_env
       code = %q<
         env = {}
