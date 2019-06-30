@@ -15,7 +15,7 @@ class Crave::Dependency::Base::VersionedInstallation < Crave::Dependency::Base::
     @exe = exe
   end
 
-  sig{ params(dependency: Crave::Dependency::Base).returns(T::Boolean) }
+  sig{ implementation.params(dependency: Crave::Dependency::Base).returns(T::Boolean) }
   def satisfies_dependency?(dependency)
     Gem::Requirement.new(*dependency.options.version).satisfied_by?(version)
   end

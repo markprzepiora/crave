@@ -7,6 +7,8 @@ using Crave::Support
 
 class Crave::Dependency::Base::Installation
   extend T::Sig
+  extend T::Helpers
+  abstract!
 
   private
 
@@ -15,9 +17,8 @@ class Crave::Dependency::Base::Installation
     T.unsafe(Open3).capture2(*args).first
   end
 
-  sig{ params(dependency: Crave::Dependency::Base).returns(T::Boolean) }
+  sig{ abstract.params(dependency: Crave::Dependency::Base).returns(T::Boolean) }
   def satisfies_dependency?(dependency)
-    true
   end
 
   sig{

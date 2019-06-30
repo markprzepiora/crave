@@ -1,4 +1,5 @@
-# typed: false
+# typed: true
+
 require 'crave'
 require 'set'
 require 'open3'
@@ -45,7 +46,7 @@ module Crave::FindExecutables
       end
     end
 
-    find_files(*where) do |filepath|
+    find_files(where) do |filepath|
       next unless \
         cmds.include?(File.basename(filepath)) &&
         File.executable?(filepath) &&
@@ -62,14 +63,12 @@ module Crave::FindExecutables
 
   sig{ params(args: String).returns(String) }
   def self.system_out(*args)
-    Open3.capture2(*args).first
+    T.unsafe(Open3).capture2(*args).first
   end
 
-  sig{ params(where: String, block: T.proc.params(arg0: String).void).void }
-  def self.find_files(*where, &block)
-    return to_enum(__callee__, *where).lazy unless block_given?
-
-    Open3.popen2("find", *where, *%w( ( -type f -or -type l ) )) do |i, o, thread|
+  sig{ params(where: T::Array[String], block: T.proc.params(arg0: String).void).void }
+  def self.find_files(where, &block)
+    T.unsafe(Open3).popen2("find", *where, *%w( ( -type f -or -type l ) )) do |i, o, thread|
       o.each_line do |line|
         yield line.chomp
       end
