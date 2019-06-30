@@ -32,7 +32,7 @@ class Crave::Dependency::Ruby < Crave::Dependency::Base
   class Installation < Crave::Dependency::Base::VersionedInstallation
     sig{ implementation.returns(Crave::SatisfiedDependency) }
     def to_satisfied_dependency
-      commands = find_commands
+      commands = find_commands('ruby', @exe, %w( erb gem irb rdoc ri ruby ))
       env = find_env
 
       Crave::SatisfiedDependency.new(:ruby).
@@ -42,10 +42,6 @@ class Crave::Dependency::Ruby < Crave::Dependency::Base
     end
 
     private
-
-    def find_commands
-      super('ruby', @exe, %w( erb gem irb rdoc ri ruby ))
-    end
 
     def find_env
       code = %q<
