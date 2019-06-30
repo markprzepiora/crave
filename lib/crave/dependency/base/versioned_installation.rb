@@ -22,7 +22,6 @@ class Crave::Dependency::Base::VersionedInstallation < Crave::Dependency::Base::
 
   sig{ abstract.returns(Crave::SatisfiedDependency) }
   def to_satisfied_dependency
-    fail ArgumentError, "must implement me"
   end
 
   sig{ params(other: Object).returns(T::Boolean) }
@@ -39,7 +38,7 @@ class Crave::Dependency::Base::VersionedInstallation < Crave::Dependency::Base::
   sig{ returns(String) }
   def version_string
     @version_string ||= begin
-      out = system_out(exe, *version_args).chomp
+      out = system_out([exe, *version_args]).chomp
       match = out.match(version_regex)
       [(match && match.captures.first) || "0.0"]
     end

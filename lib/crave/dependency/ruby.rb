@@ -6,6 +6,7 @@ require 'open3'
 class Crave::Dependency::Ruby < Crave::Dependency::Base
   options where: %w( /usr/bin /usr/local/bin ~/.rubies/ruby*/bin ~/.rvm )
 
+  sig{ implementation.returns(T::Enumerator[Installation]) }
   def find_installations
     cmd_names = %w(
       ruby
@@ -14,7 +15,7 @@ class Crave::Dependency::Ruby < Crave::Dependency::Base
       ruby3 ruby3.0 ruby3.1 ruby3.2
     )
 
-    find_executables(cmd_names, where: options.where).select do |cmd|
+    find_executables(cmd_names, where: options.where).lazy.select do |cmd|
       ruby?(cmd)
     end.map do |cmd|
       Installation.new(cmd)
@@ -23,11 +24,13 @@ class Crave::Dependency::Ruby < Crave::Dependency::Base
 
   private
 
+  sig{ params(cmd: String).returns(T::Boolean) }
   def ruby?(cmd)
-    system_out(cmd, "--version") =~ /^ruby \d/
+    !!(system_out([cmd, "--version"]) =~ /^ruby \d/)
   end
 
   class Installation < Crave::Dependency::Base::VersionedInstallation
+    sig{ implementation.returns(Crave::SatisfiedDependency) }
     def to_satisfied_dependency
       commands = find_commands
       env = find_env
@@ -59,7 +62,7 @@ class Crave::Dependency::Ruby < Crave::Dependency::Base
         puts JSON.pretty_generate(env)
       >
 
-      env = JSON.load(system_out(@exe, "-rjson", "-e", code))
+      env = JSON.load(system_out([@exe, "-rjson", "-e", code]))
       env['GEM_HOME'] = File.join(Dir.home, ".gem", env['RUBY_ENGINE'], env['RUBY_VERSION'])
       env['GEM_PATH'] = "#{env['GEM_HOME']}:#{env['GEM_ROOT']}"
       env

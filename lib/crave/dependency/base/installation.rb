@@ -10,9 +10,9 @@ class Crave::Dependency::Base::Installation
 
   private
 
-  sig{ params(args: String).returns(String) }
-  def system_out(*args)
-    Open3.capture2(*args).first
+  sig{ params(args: T::Array[String]).returns(String) }
+  def system_out(args)
+    T.unsafe(Open3).capture2(*args).first
   end
 
   sig{ params(dependency: Crave::Dependency::Base).returns(T::Boolean) }

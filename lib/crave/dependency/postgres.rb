@@ -15,7 +15,7 @@ class Crave::Dependency::Postgres < Crave::Dependency::Base
     /usr
   )
 
-  sig{ returns(T::Enumerator[Installation]) }
+  sig{ implementation.returns(T::Enumerator[Installation]) }
   def find_installations
     cmd_names = %w( postgres )
 
@@ -29,7 +29,7 @@ class Crave::Dependency::Postgres < Crave::Dependency::Base
   private
 
   def postgres?(cmd)
-    system_out(cmd, "--version").include?('postgres (PostgreSQL)')
+    system_out([cmd, "--version"]).include?('postgres (PostgreSQL)')
   end
 
   class Installation < Crave::Dependency::Base::VersionedInstallation
